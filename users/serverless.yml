@@ -6,11 +6,11 @@ provider:
   runtime: nodejs18.x
 
 functions:
-  api:
-    handler: index.handler
+  user_create:
+    handler: functions/users.create
     events:
       - httpApi:
-          path: /
+          path: /users/create
           method: get
 plugins:
   - serverless-offline
