@@ -1,0 +1,20 @@
+service: users
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+functions:
+  api:
+    handler: index.handler
+    events:
+      - httpApi:
+          path: /
+          method: get
+plugins:
+  - serverless-offline
+custom:
+  serverless-offline:
+    httpPort: 6000
+    lambdaPort: 7000
