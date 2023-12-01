@@ -1,14 +1,14 @@
-const { connectiontodb } = require('../helpers/connection');
+const entity = require('../helpers/entity');
 
-module.exports.create = async () => {
+module.exports.create = async (event) => {
     try {
-        if (!await connectiontodb()) {
-            return { statusCode: 500, body: JSON.stringify({ message: "Error", },), }
-        }
-        return { statusCode: 200, body: JSON.stringify( { message: "Go SL", }, ), }
+        const requestBody = JSON.parse(event.body);
+        const result = await entity.createRecord(requestBody);
+        return entity.sendResponse(200, result)
 
     } catch (error) {
-        return { statusCode: 500, body: JSON.stringify( { message: error, }, ), }
+        console.log(error)
+        return { statusCode: 500, body: JSON.stringify({ message: error})}
     }
 
 }

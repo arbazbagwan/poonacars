@@ -11,7 +11,7 @@ functions:
     events:
       - httpApi:
           path: /users/create
-          method: get
+          method: POST
 plugins:
   - serverless-offline
 custom:
