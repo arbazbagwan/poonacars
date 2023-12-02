@@ -6,12 +6,24 @@ provider:
   runtime: nodejs18.x
 
 functions:
-  user_create:
+  signup:
     handler: functions/users.create
     events:
       - httpApi:
-          path: /users/create
+          path: /users/signup
           method: POST
+  signin:
+    handler: functions/auth.signin
+    events:
+      - httpApi:
+          path: /users/signin
+          method: POST
+  get_one:
+    handler: functions/users.getOne
+    events:
+      - httpApi:
+          path: /users/getone
+          method: get
 plugins:
   - serverless-offline
 custom:
