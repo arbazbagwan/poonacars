@@ -7,19 +7,19 @@ provider:
 
 functions:
   signup:
-    handler: functions/users.create
+    handler: functions/users.signup
     events:
       - httpApi:
           path: /users/signup
           method: POST
   signin:
-    handler: functions/auth.signin
+    handler: functions/users.signin
     events:
       - httpApi:
           path: /users/signin
           method: POST
   get_one:
-    handler: functions/users.getOne
+    handler: functions/users.getone
     events:
       - httpApi:
           path: /users/getone
