@@ -1,21 +1,16 @@
 const { connectionToDatabase } = require('../helpers/connection');
-const users = require('../models/user');
+const user = require('../models/user');
 var jwt = require("jsonwebtoken");
 
-module.exports.createUser = async (user) => {
+module.exports.create = async (data) => {
     try {
-        connectionToDatabase().then((data, error) => {
-            if (error) {
-                return this.sendResponse(500, error);
-            }
-        }).catch((error) => {
-            this.sendResponse(500, error);
-        });
-        const User = new users(user);
-        const res = await User.save();
-        return res;
+        await connectionToDatabase();
+        const users = new user(data);
+        const res = await users.save();
+        const { name, email } = res;
+        return { statusCode: 200, body: name, email };
     } catch (error) {
-        this.sendResponse(500, 'Some Error Occured!');
+        this.sendResponse(500, error, 'Some Error Occured!');
     }
 }
 
@@ -28,14 +23,14 @@ module.exports.signin = async (data) => {
         }).catch((error) => {
             this.sendResponse(500, error);
         });
-        const {email, password} = data;
-        const user = await users.findOne({email});
+        const { email, password } = data;
+        const user = await users.findOne({ email });
         if (!user) {
-            return {statusCode: 500, data:"Wrong Email!"};
+            return { statusCode: 500, data: "Wrong Email!" };
         }
 
-        if(!user.authenticate(password)){
-            return {statusCode: 500, data:"Wrong Password!"};
+        if (!user.authenticate(password)) {
+            return { statusCode: 500, data: "Wrong Password!" };
         }
 
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '11h' });
@@ -52,6 +47,16 @@ module.exports.signin = async (data) => {
     }
 }
 
-module.exports.sendResponse = async (status, data) => {
-    return { statusCode: status, body: JSON.stringify({ data: data }) }
+module.exports.sendResponse = async (status, data, message) => {
+    return {
+        statusCode: status,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            status: status == 200 ? "success" : "failed",
+            message: message ? message : '',
+            data: data,
+        })
+    }
 }

@@ -2,8 +2,8 @@ var jwt = require("jsonwebtoken");
 
 module.exports.authenticate = async (event) => {
     try {
-        const authorizationHeader = event.headers.Authorization || event.headers.authorization || '';
-
+        const authorizationHeader = event.headers.authorization || '';
+        console.log(authorizationHeader);
         if (!authorizationHeader) {
             return { authenticated: false, message: 'No token provided.' };
         }

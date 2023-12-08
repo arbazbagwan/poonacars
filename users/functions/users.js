@@ -1,13 +1,16 @@
 const entity = require('../helpers/entity');
-const { authenticate, signin } = require('../functions/auth');
+const { authenticate } = require('../functions/auth');
 
 module.exports.signup = async (event) => {
     try {
         const requestBody = JSON.parse(event.body);
-        const result = await entity.createUser(requestBody);
-        return entity.sendResponse(200, result)
+        const name = requestBody.name;
+        const email = requestBody.email;
+        const password = requestBody.password;
+        const result = await entity.create({name, email, password});
+        return entity.sendResponse(200, result, "User Created Sucessfully");
     } catch (error) {
-        return { statusCode: 500, body: JSON.stringify({ message: error})}
+      return entity.sendResponse(500, error, "Error While Creating User");
     }
 }
 

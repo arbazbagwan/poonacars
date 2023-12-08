@@ -1,13 +1,10 @@
 const mongoose = require('mongoose');
 const crypto = require("crypto");
 const uuidv1 = require("uuidv1");
+const { timeStamp } = require('console');
 
 const userSchema = mongoose.Schema({
-    firstName: {
-        type: String,
-        required: true,
-    },
-    lastName: {
+    name: {
         type: String,
         required: true,
     },
@@ -17,12 +14,22 @@ const userSchema = mongoose.Schema({
         lowercase: true,
         trim: true,
     },
+    role: {
+        type: String,
+        default: "user",
+    },
     encry_password: {
         type: String,
-        required: true
+        required: true,
     },
-    salt: String
-})
+    salt: String,
+    permission:{
+        type: Array,
+        default: [],
+    }
+},
+    { timestamp: true }
+)
 
 userSchema
     .virtual("password")
@@ -53,4 +60,4 @@ userSchema.methods = {
     }
 };
 
-module.exports = mongoose.model("users", userSchema);
+module.exports = mongoose.model("user", userSchema);
