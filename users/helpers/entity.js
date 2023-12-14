@@ -24,20 +24,17 @@ module.exports.signin = async (data) => {
             this.sendResponse(500, error);
         });
         const { email, password } = data;
-        const user = await users.findOne({ email });
-        if (!user) {
+        const users = await user.findOne({ email });
+        if (!users) {
             return { statusCode: 500, data: "Wrong Email!" };
         }
 
-        if (!user.authenticate(password)) {
+        if (!users.authenticate(password)) {
             return { statusCode: 500, data: "Wrong Password!" };
         }
 
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET_KEY, { expiresIn: '11h' });
-        const response = {
-            token,
-            user
-        };
+        const token = jwt.sign({ id: users.id }, process.env.JWT_SECRET_KEY, { expiresIn: '11h' });
+        const response = { token, email };
 
         return response;
 
