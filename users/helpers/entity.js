@@ -25,22 +25,23 @@ module.exports.signin = async (data) => {
         });
         const { email, password } = data;
         const users = await user.findOne({ email });
+        const { role } = users;
         if (!users) {
-            return { statusCode: 500, data: "Wrong Email!" };
+            return this.sendResponse(500, "Wrong Email!");
         }
 
         if (!users.authenticate(password)) {
-            return { statusCode: 500, data: "Wrong Password!" };
+            return this.sendResponse(500, "Wrong Password!");
         }
 
         const token = jwt.sign({ id: users.id }, process.env.JWT_SECRET_KEY, { expiresIn: '11h' });
-        const response = { token, email };
+        const response = { token, email, role };
 
         return response;
 
     } catch (err) {
         console.error('Error:', err);
-        return entity.sendResponse(500, err);
+        return this.sendResponse(500, err);
     }
 }
 
@@ -48,7 +49,10 @@ module.exports.sendResponse = async (status, data, message) => {
     return {
         statusCode: status,
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
+            'Access-Control-Allow-Headers': 'Content-Type',
         },
         body: JSON.stringify({
             status: status == 200 ? "success" : "failed",

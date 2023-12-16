@@ -18,6 +18,7 @@ module.exports.signin = async (event) => {
   try {
       const requestBody = JSON.parse(event.body);
       const result = await entity.signin(requestBody);
+      console.log(result)
       if(result.statusCode == 500){
         return entity.sendResponse(500, 'Wrong Email or Password!');
       }
@@ -35,6 +36,10 @@ module.exports.getone = async (event) => {
   } else {
     return { statusCode: 401, body: JSON.stringify({ message: 'Unauthorized.' }) };
   }
+};
+
+module.exports.getall = async (event) => {
+    return { statusCode: 200, body: JSON.stringify({ message: 'Hello SL.' }) };
 };
 
 
