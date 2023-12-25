@@ -1,0 +1,21 @@
+service: cars
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+functions:
+  api:
+    handler: functions/car.add_car
+    events:
+      - httpApi:
+          path: /car/create
+          method: post
+plugins:
+  - serverless-offline
+  - serverless-plugin-common-excludes
+custom:
+  serverless-offline:
+    httpPort: 3001
+    lambdaPort: 7001
